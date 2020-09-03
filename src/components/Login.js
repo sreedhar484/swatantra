@@ -10,8 +10,9 @@ import {
   Text,
   Button,
 } from "@chakra-ui/core";
+import { Redirect } from "react-router-dom";
 
-function Login() {
+function Login(props) {
   return (
     <Box
       d="flex"
@@ -48,7 +49,7 @@ function Login() {
           <Image src={logbackground} alt="background" float="right"></Image>
         </Box>
         <Box mx={["25px", "25px", "25px", "40px"]}>
-          <form>
+          <form onSubmit={props.btnClick}>
             <Text
               fontSize="30px"
               // fontFamily="NotoSansJP-Bold"
@@ -64,33 +65,53 @@ function Login() {
                 variant="flushed"
                 type="text"
                 placeholder="USER NAME"
-                borderColor="rgba(255,255,255,0.24)"
+                name="userName"
+                value={props.state.userName}
+                onChange={props.changeHandle}
+                borderColor={
+                  props.state.erroru ? "crimson" : "rgba(255,255,255,0.24)"
+                }
+                focusBorderColor={props.state.erroru ? "crimson" : "#2A69AC"}
               ></Input>
-              <FormHelperText></FormHelperText>
+              <FormHelperText color="red.500">
+                {props.state.errorum}
+              </FormHelperText>
             </FormControl>
             <FormControl mt="14%">
               <Input
                 type="password"
                 variant="flushed"
                 placeholder="PASSWORD"
-                borderColor="rgba(255,255,255,0.24)"
+                name="password"
+                value={props.state.password}
+                onChange={props.changeHandle}
+                borderColor={
+                  props.state.errorp ? "crimson" : "rgba(255,255,255,0.24)"
+                }
+                focusBorderColor={props.state.errorp ? "crimson" : "#2A69AC"}
               ></Input>
-              <FormHelperText></FormHelperText>
+              <FormHelperText color="red.500">
+                {props.state.errorpm}
+              </FormHelperText>
             </FormControl>
-            <Button
-              type="submit"
-              mt="14%"
-              mb="16%"
-              backgroundColor="white"
-              fontFamily="Rubik-Regular"
-              fontSize="18px"
-              color="#112147"
-              borderRadius="4px"
-              width="114px"
-              h="44px"
-            >
-              Login
-            </Button>
+            {props.state.log ? (
+              <Redirect to="/dashboard" />
+            ) : (
+              <Button
+                type="submit"
+                mt="14%"
+                mb="16%"
+                backgroundColor="white"
+                fontFamily="Rubik-Regular"
+                fontSize="18px"
+                color="#112147"
+                borderRadius="4px"
+                width="114px"
+                h="44px"
+              >
+                Login
+              </Button>
+            )}
           </form>
         </Box>
       </Box>

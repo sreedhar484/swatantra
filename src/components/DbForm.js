@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Flex,
@@ -100,11 +100,10 @@ function DbForm(props) {
             </FormLabel>
             <RadioGroup
               id="type"
-              mt={-4}
+              mt={2}
               name="type"
               defaultValue="0"
               spacing={[2, 2, 2, 10]}
-              mt={4}
               isInline={[false, false, false, true]}
             >
               <Radio variantColor="green" value="book" mt={-4}>
