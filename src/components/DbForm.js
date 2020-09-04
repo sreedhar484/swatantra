@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link, Redirect } from "react-router-dom";
 import {
   Box,
   Flex,
@@ -15,24 +16,33 @@ import {
   InputRightElement,
   Icon,
   Image,
+  IconButton,
 } from "@chakra-ui/core";
 import Cross from "../asserts/Cross.svg";
 function DbForm(props) {
+  useEffect(() => {
+    props.state.edit
+      ? (props.state.editone = true)
+      : (props.state.editone = false);
+    props.state.edit = false;
+  }, []);
   return (
     <Flex mx="3%">
       <Box width="18%" d={["none", "none", "none", "flex"]}>
-        <Button
-          mt="50px"
-          border="1px solid #112147"
-          backgroundColor="white"
-          w="143px"
-          h="40px"
-        >
-          BACK
-        </Button>
+        <Link to="/dashboard">
+          <Button
+            mt="50px"
+            border="1px solid #112147"
+            backgroundColor="white"
+            w="143px"
+            h="40px"
+          >
+            BACK
+          </Button>
+        </Link>
       </Box>
       <Box w={["100%", "100%", "100%", "82%"]}>
-        <form>
+        <form onSubmit={props.onSubmit1}>
           <Text
             color="#104670"
             fontSize="18px"
@@ -51,9 +61,11 @@ function DbForm(props) {
               variant="flushed"
               name="name"
               id="name"
+              value={props.state.name}
+              onChange={props.nameChange}
             ></Input>
             <FormHelperText color="red.500">
-              {/* {props.state.erroruser} */}
+              {props.state.erroruser}
             </FormHelperText>
           </FormControl>
           <Box d={["", "", "", "flex"]}>
@@ -68,9 +80,11 @@ function DbForm(props) {
                   variant="flushed"
                   name="phone"
                   id="phone"
+                  value={props.state.phone}
+                  onChange={props.nameChange}
                 ></Input>
                 <FormHelperText color="red.500">
-                  {/* {props.state.errorphone} */}
+                  {props.state.errorphone}
                 </FormHelperText>
               </FormControl>
             </Box>
@@ -89,8 +103,12 @@ function DbForm(props) {
                   name="email"
                   type="email"
                   id="email"
+                  value={props.state.email}
+                  onChange={props.nameChange}
                 ></Input>
-                <FormHelperText color="red.500"></FormHelperText>
+                <FormHelperText color="red.500">
+                  {props.state.erroremail}
+                </FormHelperText>
               </FormControl>
             </Box>
           </Box>
@@ -102,6 +120,8 @@ function DbForm(props) {
               id="type"
               mt={2}
               name="type"
+              onChange={props.nameChange}
+              value={props.type}
               defaultValue="0"
               spacing={[2, 2, 2, 10]}
               isInline={[false, false, false, true]}
@@ -114,7 +134,7 @@ function DbForm(props) {
               </Radio>
             </RadioGroup>
             <FormHelperText color="red.500">
-              {/* {props.state.errortype} */}
+              {props.state.errortype}
             </FormHelperText>
           </FormControl>
           <FormControl mt={2}>
@@ -129,9 +149,19 @@ function DbForm(props) {
                   type="number"
                   h="28px"
                   name="amountCount"
+                  value={props.state.amountCount}
+                  onChange={props.nameChange}
                 />
                 <InputRightElement
-                  children={<Icon name="triangle-down" mb={3} />}
+                  children={
+                    <Button
+                      mb={3}
+                      backgroundColor="white"
+                      onClick={props.onDownClick}
+                    >
+                      <Icon name="triangle-down" />
+                    </Button>
+                  }
                 />
               </InputGroup>
               <Image src={Cross} mx={4} />
@@ -142,26 +172,35 @@ function DbForm(props) {
                 w={["20%", "20%", "20%", "10%"]}
                 h="28px"
                 type="number"
-                value="123"
+                _readOnly
+                value={props.state.amountCount * 1000}
               />
             </Box>
           </FormControl>
-          <Box>
-            <Text color="grey.200" mt={6} opacity="0.45">
-              NOTES
-            </Text>
-            <Textarea name="notes"></Textarea>
-          </Box>
-          <Button
-            type="submit"
-            mt={8}
-            mb={2}
-            backgroundColor="#1A365D"
-            color="white"
-            w={["100%", "100%", "100%", "15%"]}
-          >
-            SUBMIT
-          </Button>
+          {props.state.type === "purchase" ? (
+            <Box>
+              <Text color="grey.200" mt={6} opacity="0.45">
+                NOTES
+              </Text>
+              <Textarea name="notes"></Textarea>
+            </Box>
+          ) : (
+            ""
+          )}
+          {props.state.entry ? (
+            <Redirect to="/submit" />
+          ) : (
+            <Button
+              type="submit"
+              mt={8}
+              mb={2}
+              backgroundColor="#1A365D"
+              color="white"
+              w={["100%", "100%", "100%", "15%"]}
+            >
+              SUBMIT
+            </Button>
+          )}
         </form>
       </Box>
     </Flex>

@@ -53,6 +53,7 @@ class Main extends Component {
     toast.configure();
   }
   onDownClick = () => {
+    console.log("hfg");
     this.setState({ amountCount: Number(this.state.amountCount) + 1 });
   };
   // page change method
@@ -117,16 +118,12 @@ class Main extends Component {
       cou: slice,
     });
   }
-  // add the new form
-  addNew = () => {
-    this.setState({ name: "", phone: "", email: "" });
-  };
   // edit the form deatails
   onEdit = (id) => {
     const data = this.state.array.filter((data) => data.userId === id);
     this.setState(
       {
-        name: data[0].Name,
+        name: data[0].userName,
         phone: data[0].phone,
         email: data[0].email,
         userid: data[0].userId,
@@ -147,7 +144,7 @@ class Main extends Component {
     this.setState(
       {
         temp: this.state.array.sort((a, b) =>
-          a.Name > b.Name ? 1 : b.Name > a.Name ? -1 : 0
+          a.userName > b.userName ? 1 : b.userName > a.userName ? -1 : 0
         ),
       },
       () => this.getData(this.state.temp)
@@ -157,7 +154,7 @@ class Main extends Component {
     this.setState(
       {
         temp: this.state.array.sort((a, b) =>
-          a.Name < b.Name ? 1 : b.Name < a.Name ? -1 : 0
+          a.userName < b.userName ? 1 : b.userName < a.userName ? -1 : 0
         ),
       },
       () => this.getData(this.state.temp)
@@ -179,6 +176,26 @@ class Main extends Component {
       {
         temp: this.state.array.sort(
           (a, b) => b.recievedAmount - a.recievedAmount
+        ),
+      },
+      () => this.getData(this.state.temp)
+    );
+  };
+  recievedDateAsci = () => {
+    this.setState(
+      {
+        temp: this.state.array.sort(
+          (a, b) => new Date(a.recievedDate) - new Date(b.recievedDate)
+        ),
+      },
+      () => this.getData(this.state.temp)
+    );
+  };
+  recievedDateDsci = () => {
+    this.setState(
+      {
+        temp: this.state.array.sort(
+          (a, b) => new Date(b.recievedDate) - new Date(a.recievedDate)
         ),
       },
       () => this.getData(this.state.temp)
@@ -215,10 +232,31 @@ class Main extends Component {
       () => this.getData(this.state.temp)
     );
   };
+  // sort dates
+  pledgedDateAsci = () => {
+    this.setState(
+      {
+        temp: this.state.array.sort(
+          (a, b) => new Date(a.pledgedDate) - new Date(b.pledgedDate)
+        ),
+      },
+      () => this.getData(this.state.temp)
+    );
+  };
+  pledgedDateDsci = () => {
+    this.setState(
+      {
+        temp: this.state.array.sort(
+          (a, b) => new Date(b.pledgedDate) - new Date(a.pledgedDate)
+        ),
+      },
+      () => this.getData(this.state.temp)
+    );
+  };
   // login form method
   btnClick = (event) => {
     event.preventDefault();
-    Axios.post("http://localhost:3430/login", {
+    Axios.post("http://localhost:2733/login", {
       userName: this.state.userName,
       password: this.state.password,
     })
@@ -235,14 +273,28 @@ class Main extends Component {
       .catch((err) => console.log(err));
   };
   // search method
-  search = (event) => {
+  searchEvent = (event) => {
     this.setState({ search: event.target.value }, () => {
       if (this.state.search.length > 0) {
+        let arr1 = this.state.array.filter((ele) =>
+          ele.userName.toLowerCase().startsWith(this.state.search.toLowerCase())
+        );
+        let arr2 = this.state.array.filter((ele) =>
+          ele.pledgedDate
+            .toLowerCase()
+            .startsWith(this.state.search.toLowerCase())
+        );
+        let arr = [...arr1, ...arr2];
+        var resArr = [];
+        arr.forEach(function (item) {
+          var i = resArr.findIndex((x) => x.userId === item.userId);
+          if (i <= -1) {
+            resArr.push(item);
+          }
+        });
         this.setState({
           search1: false,
-          cou: this.state.array.filter((ele) =>
-            ele.Name.toLowerCase().startsWith(this.state.search.toLowerCase())
-          ),
+          cou: resArr,
         });
       } else {
         this.setState({ search1: true });
@@ -250,8 +302,9 @@ class Main extends Component {
       }
     });
   };
-  onFilterChange = (value) => {
-    value === "nasc" ? this.nameAsci() : this.nameDsci();
+  onFilterChange = (name, pledged) => {
+    name === "nasci" ? this.nameAsci() : this.nameDsci();
+    pledged === "pasci" ? this.pledgedAsci() : this.pledgedDsci();
   };
   // deb form submit method
   onSubmit1 = (event) => {
@@ -267,7 +320,7 @@ class Main extends Component {
               ? Axios.put(
                   "http://localhost:2733/editdetails/" + this.state.userid,
                   {
-                    Name: this.state.name,
+                    userName: this.state.name,
                     phone: Number(this.state.phone),
                     email: this.state.email,
                     deb_type: this.state.type,
@@ -291,7 +344,7 @@ class Main extends Component {
                   })
                   .catch((err) => console.log(err))
               : Axios.post("http://localhost:2733/deb_form", {
-                  Name: this.state.name,
+                  userName: this.state.name,
                   phone: Number(this.state.phone),
                   email: this.state.email,
                   deb_type: this.state.type,
@@ -347,16 +400,19 @@ class Main extends Component {
                 />
                 <Dashboard
                   state={this.state}
-                  search={this.search}
+                  searchEvent={this.searchEvent}
                   nameAsci={this.nameAsci}
                   nameDsci={this.nameDsci}
                   pledgedAsci={this.pledgedAsci}
                   pledgedDsci={this.pledgedDsci}
+                  pledgedDateAsci={this.pledgedDateAsci}
+                  pledgedDateDsci={this.pledgedDateDsci}
                   recievedAsci={this.recievedAsci}
                   recievedDsci={this.recievedDsci}
+                  recievedDateAsci={this.recievedDateAsci}
+                  recievedDateDsci={this.recievedDateDsci}
                   handlePageClick={this.handlePageClick}
                   onEdit={this.onEdit}
-                  addNew={this.addNew}
                   onFilterChange={this.onFilterChange}
                   onDownClick={this.onDownClick}
                   onDelete={this.onDelete}

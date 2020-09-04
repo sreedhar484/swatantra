@@ -27,6 +27,7 @@ import {
   FormLabel,
   RadioGroup,
   Radio,
+  FormHelperText,
 } from "@chakra-ui/core";
 import Plus from "../asserts/Plus.svg";
 import Sort from "../asserts/Sort.svg";
@@ -34,26 +35,41 @@ import FilterIcon from "../asserts/Filter.svg";
 import FilterIcon1 from "../asserts/FilterM.svg";
 import ReactPaginate from "react-paginate";
 import "../App.css";
+import PledgedIcon from "../asserts/Pledged.svg";
+import RecievedIcon from "../asserts/Recieved.svg";
+import ReducedIcon from "../asserts/Reduced.svg";
+import IncreasedIcon from "../asserts/Increased.svg";
+import Filters from "../asserts/Filters.svg";
+import { Link, Redirect } from "react-router-dom";
+import { AiOutlineEllipsis } from "react-icons/ai";
 function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [searchVal, onSearchClick] = useState(false);
-  console.log(searchVal);
+  const [filterValname, onFilterName] = useState();
+  const [filterValpledged, onFilterPledged] = useState();
+  const [statusVal1, statusFilter1] = useState();
+  const [statusVal2, statusFilter2] = useState();
+  const [statusVal3, statusFilter3] = useState();
+  const [statusVal4, statusFilter4] = useState();
+  const [statusVal5, statusFilter5] = useState();
   return (
     <Box mx={["16px", "16px", "16px", "40px"]}>
       {/* button in mobile view */}
-      <Button
-        mt="16px"
-        d={["flex", "flex", "flex", "none"]}
-        h="40px"
-        w="100%"
-        border="1px solid #112147"
-        backgroundColor="white"
-        borderRadius="4px"
-        boxShadow="0 0 7px 2px rgba(0,0,0,0.12)"
-      >
-        <Image src={Plus} mr="8px" />
-        ADD NEW ENTRY
-      </Button>
+      <Link to="/newentry">
+        <Button
+          mt="16px"
+          d={["flex", "flex", "flex", "none"]}
+          h="40px"
+          w="100%"
+          border="1px solid #112147"
+          backgroundColor="white"
+          borderRadius="4px"
+          boxShadow="0 0 7px 2px rgba(0,0,0,0.12)"
+        >
+          <Image src={Plus} mr="8px" />
+          ADD NEW ENTRY
+        </Button>
+      </Link>
       {/* total amount */}
       <Grid
         templateColumns={["50% 50%", "50% 50%", "50% 50%", "72% 28%"]}
@@ -68,10 +84,13 @@ function Dashboard(props) {
           d={["none", "none", "none", "flex"]}
           justifyContent="space-between"
         >
-          <Text alignSelf="center">
-            {props.state.array.length} potential buyers
-          </Text>
-          <Text alignSelf="center">
+          <Box alignSelf="center" d="flex">
+            <Text mr={2} fontSize="30px">
+              {props.state.array.length}
+            </Text>
+            <Text alignSelf="center">potential buyers</Text>
+          </Box>
+          <Text alignSelf="center" fontSize="20px">
             &#8377; {props.state.totalpledged} pledged amount
           </Text>
         </Box>
@@ -80,10 +99,14 @@ function Dashboard(props) {
           d={["flex", "flex", "flex", "none"]}
           justifyContent="center"
         >
-          <Text alignSelf="center">
-            &#8377; {props.state.totalpledged} pledged by{" "}
-            {props.state.array.length} buyers
-          </Text>
+          <Box alignSelf="center">
+            <Text textAlign="center" color="#000F00">
+              &#8377; {props.state.totalpledged} pledged
+            </Text>
+            <Text textAlign="center" color="#000F00">
+              {props.state.array.length} buyers
+            </Text>
+          </Box>
         </Box>
 
         <Box
@@ -92,13 +115,29 @@ function Dashboard(props) {
           opacity="0.8"
           border="1px solid #F0F5FA"
         >
-          <Text
-            textAlign="center"
+          <Box
             color="#112147"
-            mt={["2px", "2px", "12px", "25px"]}
+            d="flex"
+            flexDirection={["column", "column", "column", "row"]}
+            mt={["3px", "3px", "3px", "13px"]}
+            justifyContent="center"
           >
-            &#8377; {props.state.totalrecieved} Realized Amount
-          </Text>
+            <Text
+              mr={2}
+              fontSize={["18px", "18px", "22px", "25px"]}
+              alignSelf="center"
+              color="#000F00"
+            >
+              &#8377; {props.state.totalrecieved}
+            </Text>
+            <Text
+              alignSelf="center"
+              color="#000F00"
+              fontSize={["15px", "15px", "15px", "20px"]}
+            >
+              Realized Amount
+            </Text>
+          </Box>
         </Box>
       </Grid>
       {/* search */}
@@ -110,7 +149,11 @@ function Dashboard(props) {
       >
         <Box d="flex">
           {searchVal ? (
-            <InputGroup d={["flex", "flex", "flex", "none"]} w="100%">
+            <InputGroup
+              d={["flex", "flex", "flex", "none"]}
+              w="100%"
+              flexDirection="column"
+            >
               <InputLeftElement
                 children={<Icon name="search" mb={4} color="#112147" />}
               />
@@ -119,26 +162,33 @@ function Dashboard(props) {
                 w="100%"
                 type="text"
                 h="24px"
+                value={props.state.search}
                 placeholder="Search Entry"
                 name="search"
+                onChange={props.searchEvent}
               />
+              <FormHelperText d={props.state.search1 ? "none" : "flex"}>
+                {props.state.cou.length} results found
+              </FormHelperText>
             </InputGroup>
           ) : (
             <Text mr={4} fontSize={["12px", "12px", "12px", "18px"]}>
               ALL DEBENTURE BUYERS
             </Text>
           )}
-          <Button
-            d={["none", "none", "none", "flex"]}
-            h="24px"
-            w="165px"
-            border="1px solid #112147"
-            backgroundColor="white"
-            borderRadius="4px"
-          >
-            <Image src={Plus} mr="8px" color="#112147" />
-            ADD NEW ENTRY
-          </Button>
+          <Link to="/newentry">
+            <Button
+              d={["none", "none", "none", "flex"]}
+              h="24px"
+              w="165px"
+              border="1px solid #112147"
+              backgroundColor="white"
+              borderRadius="4px"
+            >
+              <Image src={Plus} mr="8px" color="#112147" />
+              ADD NEW ENTRY
+            </Button>
+          </Link>
         </Box>
         <Box>
           <Box d={["flex", "flex", "flex", "none"]}>
@@ -164,6 +214,7 @@ function Dashboard(props) {
               >
                 <DrawerBody>
                   <Box d="flex">
+                    <Image src={Filters} mr={2} />
                     <Text>FILTERS</Text>
                     <DrawerCloseButton />
                   </Box>
@@ -177,6 +228,8 @@ function Dashboard(props) {
                       defaultValue="0"
                       spacing={[2, 2, 2, 10]}
                       isInline
+                      value={filterValname}
+                      onChange={(e) => onFilterName(e.target.value)}
                     >
                       <Radio variantColor="green" value="nasci">
                         Ascinding
@@ -195,8 +248,10 @@ function Dashboard(props) {
                       id="ptype"
                       name="ptype"
                       defaultValue="0"
+                      value={filterValpledged}
                       spacing={[2, 2, 2, 10]}
                       isInline
+                      onChange={(e) => onFilterPledged(e.target.value)}
                     >
                       <Radio variantColor="green" value="pasci">
                         Ascinding
@@ -220,56 +275,117 @@ function Dashboard(props) {
                     <Checkbox value="two">20,000-49,000</Checkbox>
                     <Checkbox value="three">50,000-1,00,000</Checkbox>
                   </CheckboxGroup>
+                  <Button
+                    backgroundColor="#112147"
+                    width="100%"
+                    border="1px solid white"
+                    onClick={() =>
+                      props.onFilterChange(filterValname, filterValpledged)
+                    }
+                  >
+                    APPLY
+                  </Button>
                 </DrawerBody>
               </DrawerContent>
             </Drawer>
           </Box>
-          <InputGroup d={["none", "none", "none", "flex"]}>
-            <InputLeftElement
-              children={<Icon name="search" mb={3} color="#112147" />}
-            />
-            <Input
-              variant="flushed"
-              w="100%"
-              type="text"
-              h="24px"
-              placeholder="Search Entry"
-              name="amountCount"
-            />
-          </InputGroup>
+          <FormControl d={["none", "none", "none", "flex"]}>
+            <FormHelperText d={props.state.search1 ? "none" : "flex"}>
+              {props.state.cou.length} results found
+            </FormHelperText>
+            <InputGroup>
+              <InputLeftElement
+                children={<Icon name="search" mb={3} color="#112147" />}
+              />
+              <Input
+                variant="flushed"
+                w="100%"
+                type="text"
+                h="24px"
+                value={props.state.search}
+                placeholder="Search Entry"
+                name="search"
+                onChange={props.searchEvent}
+              />
+            </InputGroup>
+          </FormControl>
         </Box>
       </Box>
       {/* table */}
-      <Box mt="16px">
+      <Box mt="25px">
         {/* table in mobile view */}
         <Grid
-          templateRows="1fr"
+          templateRows={"repeat(" + props.state.cou.length + ",1fr)"}
           gap="15px"
           d={["grid", "grid", "grid", "none"]}
         >
-          <Box boxShadow="0 0 7px 2px rgba(80,80,80,0.10)" borderRadius="4px">
+          {props.state.cou.map((data, idx) => (
             <Box
-              d="flex"
-              h="35px"
-              px="12px"
-              justifyContent="space-between"
-              backgroundColor="#F0F5FA"
-              alignItems="center"
+              boxShadow="0 0 7px 2px rgba(80,80,80,0.10)"
+              borderRadius="4px"
+              key={idx}
             >
-              <Text>Sreedhar</Text>
-              <Text>RECIEVED</Text>
+              <Box
+                d="flex"
+                h="35px"
+                px="12px"
+                justifyContent="space-between"
+                backgroundColor="#F0F5FA"
+                alignItems="center"
+              >
+                <Text>{data.userName}</Text>
+                <Box d="flex">
+                  {data.status === "pledged" ? (
+                    <Box d="flex">
+                      <Image src={PledgedIcon} mr={1} />
+                      <Text color="#ED8F05">{data.status.toUpperCase()}</Text>
+                    </Box>
+                  ) : data.status === "Recieved" ? (
+                    <Box d="flex">
+                      <Image src={RecievedIcon} mr={1} />
+                      <Text color="green.500">{data.status.toUpperCase()}</Text>
+                    </Box>
+                  ) : data.status === "Reduced" ? (
+                    <Box d="flex">
+                      <Image src={ReducedIcon} mr={1} />
+                      <Text color="#00B4BD">{data.status.toUpperCase()}</Text>
+                    </Box>
+                  ) : (
+                    <Box d="flex">
+                      <Image src={IncreasedIcon} mr={1} />
+                      <Text color="#00B4BD">{data.status.toUpperCase()}</Text>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+              <Grid templateColumns="1fr 1fr" px="12px">
+                <Box my={4}>
+                  <Text>
+                    {data.status === "pledged"
+                      ? "Pledged Amount"
+                      : "Recieved Amount"}
+                  </Text>
+                  <Text mt={2}>
+                    {data.status === "pledged"
+                      ? data.pledgedAmount
+                      : data.recievedAmount}
+                  </Text>
+                </Box>
+                <Box my={4}>
+                  <Text>
+                    {data.status === "Pledged"
+                      ? "Pledged Date"
+                      : "Recieved Date"}
+                  </Text>
+                  <Text mt={2}>
+                    {data.status === "Pledged"
+                      ? data.pledgedDate
+                      : data.recievedDate}
+                  </Text>
+                </Box>
+              </Grid>
             </Box>
-            <Grid templateColumns="1fr 1fr" px="12px">
-              <Box my={4}>
-                <Text>Recieved Amount</Text>
-                <Text mt={2}>12345</Text>
-              </Box>
-              <Box my={4}>
-                <Text>Recieved Amount</Text>
-                <Text mt={2}>12345</Text>
-              </Box>
-            </Grid>
-          </Box>
+          ))}
         </Grid>
         {/* Table in laptop */}
         <Box d={["none", "none", "none", "flex"]} w="100%">
@@ -306,14 +422,18 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <Button backgroundColor="teal.500" border="none">
+                      <Button
+                        backgroundColor="teal.500"
+                        border="none"
+                        onClick={props.nameAsci}
+                      >
                         Ascinding
                       </Button>
                       <br></br>
                       <Button
-                        icon="delete"
                         backgroundColor="teal.500"
                         border="none"
+                        onClick={props.nameDsci}
                       >
                         Descinding
                       </Button>
@@ -338,7 +458,11 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <Button backgroundColor="teal.500" border="none">
+                      <Button
+                        backgroundColor="teal.500"
+                        border="none"
+                        onClick={props.pledgedAsci}
+                      >
                         Ascinding
                       </Button>
                       <br></br>
@@ -346,6 +470,7 @@ function Dashboard(props) {
                         icon="delete"
                         backgroundColor="teal.500"
                         border="none"
+                        onClick={props.pledgedDsci}
                       >
                         Descinding
                       </Button>
@@ -400,14 +525,18 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <Button backgroundColor="teal.500" border="none">
+                      <Button
+                        backgroundColor="teal.500"
+                        border="none"
+                        onClick={props.pledgedDateAsci}
+                      >
                         Ascinding
                       </Button>
                       <br></br>
                       <Button
-                        icon="delete"
                         backgroundColor="teal.500"
                         border="none"
+                        onClick={props.pledgedDateDsci}
                       >
                         Descinding
                       </Button>
@@ -430,7 +559,11 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <Button backgroundColor="teal.500" border="none">
+                      <Button
+                        backgroundColor="teal.500"
+                        border="none"
+                        onClick={props.recievedAsci}
+                      >
                         Ascinding
                       </Button>
                       <br></br>
@@ -438,6 +571,7 @@ function Dashboard(props) {
                         icon="delete"
                         backgroundColor="teal.500"
                         border="none"
+                        onClick={props.recievedDsci}
                       >
                         Descinding
                       </Button>
@@ -492,14 +626,18 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <Button backgroundColor="teal.500" border="none">
+                      <Button
+                        backgroundColor="teal.500"
+                        border="none"
+                        onClick={props.recievedDateAsci}
+                      >
                         Ascinding
                       </Button>
                       <br></br>
                       <Button
-                        icon="delete"
                         backgroundColor="teal.500"
                         border="none"
+                        onClick={props.recievedDateDsci}
                       >
                         Descinding
                       </Button>
@@ -526,12 +664,50 @@ function Dashboard(props) {
                         variantColor="green"
                         defaultValue={["all"]}
                       >
-                        <Checkbox value="all">ALL</Checkbox>
-                        <Checkbox value="recieved">RECIEVED</Checkbox>
-                        <Checkbox value="pledged">PLEDGED</Checkbox>
-                        <Checkbox value="increased">INCREASED</Checkbox>
-                        <Checkbox value="reduced">REDUCED</Checkbox>
+                        <Checkbox
+                          value="all"
+                          onChange={(event) =>
+                            statusFilter1(event.target.checked)
+                          }
+                        >
+                          ALL
+                        </Checkbox>
+                        <Checkbox
+                          value="recieved"
+                          onChange={(event) =>
+                            statusFilter2(event.target.checked)
+                          }
+                        >
+                          RECIEVED
+                        </Checkbox>
+                        <Checkbox
+                          value="pledged"
+                          onChange={(event) =>
+                            statusFilter3(event.target.checked)
+                          }
+                        >
+                          PLEDGED
+                        </Checkbox>
+                        <Checkbox
+                          value="increased"
+                          onChange={(event) =>
+                            statusFilter4(event.target.checked)
+                          }
+                        >
+                          INCREASED
+                        </Checkbox>
+                        <Checkbox
+                          value="reduced"
+                          onChange={(event) =>
+                            statusFilter5(event.target.checked)
+                          }
+                        >
+                          REDUCED
+                        </Checkbox>
                       </CheckboxGroup>
+                      <Button backgroundColor="teal.500" ml={3}>
+                        APPLY
+                      </Button>
                     </PopoverBody>
                   </PopoverContent>
                 </Popover>
@@ -540,6 +716,7 @@ function Dashboard(props) {
             {/* Table Body */}
             {props.state.cou.map((data, idx) => (
               <Grid
+                key={idx}
                 w="100%"
                 fontSize="14px"
                 templateColumns="repeat(8, 1fr)"
@@ -547,7 +724,7 @@ function Dashboard(props) {
                 alignItems="center"
                 h="40px"
               >
-                <Text ml={2}>{data.Name}</Text>
+                <Text ml={2}>{data.userName}</Text>
                 <Text>{data.phone}</Text>
                 <Text overflow="hidden" textOverflow="ellipsis">
                   {data.email}
@@ -557,12 +734,44 @@ function Dashboard(props) {
                 <Text textAlign="center">{data.recievedAmount}</Text>
                 <Text>{data.recievedDate}</Text>
                 <Box d="flex">
-                  <Image src={Sort} mr={2}></Image>
-                  <Text mt={1}>{data.status}</Text>
+                  {data.status === "pledged" ? (
+                    <Box d="flex">
+                      <Image src={PledgedIcon} mr={1} />
+                      <Text mt={1} color="#ED8F05">
+                        {data.status.toUpperCase()}
+                      </Text>
+                    </Box>
+                  ) : data.status === "Recieved" ? (
+                    <Box d="flex">
+                      <Image src={RecievedIcon} mr={1} />
+                      <Text color="green.500" mt={1}>
+                        {data.status.toUpperCase()}
+                      </Text>
+                    </Box>
+                  ) : data.status === "Reduced" ? (
+                    <Box d="flex">
+                      <Image src={ReducedIcon} mr={1} />
+                      <Text color="#00B4BD" mt={1}>
+                        {data.status.toUpperCase()}
+                      </Text>
+                    </Box>
+                  ) : (
+                    <Box d="flex">
+                      <Image src={IncreasedIcon} mr={1} />
+                      <Text color="#00B4BD" mt={1}>
+                        {data.status.toUpperCase()}
+                      </Text>
+                    </Box>
+                  )}
+
                   <Popover>
                     <PopoverTrigger>
-                      <Button backgroundColor="white" size="sm">
-                        <Image src={FilterIcon} />
+                      <Button
+                        backgroundColor="white"
+                        size="sm"
+                        transform="rotate(90deg)"
+                      >
+                        <AiOutlineEllipsis />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent
@@ -572,15 +781,24 @@ function Dashboard(props) {
                     >
                       <PopoverArrow />
                       <PopoverBody color="white">
-                        <Button backgroundColor="teal.500" border="none">
-                          <Icon name="edit" mr={2} />
-                          Edit
-                        </Button>
+                        {props.state.edit ? (
+                          <Redirect to="/newentry" />
+                        ) : (
+                          <Button
+                            backgroundColor="teal.500"
+                            border="none"
+                            onClick={() => props.onEdit(data.userId)}
+                          >
+                            <Icon name="edit" mr={2} />
+                            Edit
+                          </Button>
+                        )}
                         <br></br>
                         <Button
                           icon="delete"
                           backgroundColor="teal.500"
                           border="none"
+                          onClick={() => props.onDelete(data.userId)}
                         >
                           <Icon name="delete" mr={2}></Icon>Delete
                         </Button>
@@ -597,7 +815,6 @@ function Dashboard(props) {
           float="right"
           border="1px solid grey"
           color="blue.800"
-          mr={4}
           mt={4}
           h={8}
           borderRadius="5px"
