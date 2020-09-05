@@ -8,7 +8,9 @@ function App() {
   return (
     <ThemeProvider>
       <CSSReset />
-      <Main />
+      <div className="App">
+        <Main />
+      </div>
     </ThemeProvider>
   );
 }

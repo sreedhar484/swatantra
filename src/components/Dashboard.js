@@ -47,11 +47,18 @@ function Dashboard(props) {
   const [searchVal, onSearchClick] = useState(false);
   const [filterValname, onFilterName] = useState();
   const [filterValpledged, onFilterPledged] = useState();
-  const [statusVal1, statusFilter1] = useState();
-  const [statusVal2, statusFilter2] = useState();
-  const [statusVal3, statusFilter3] = useState();
-  const [statusVal4, statusFilter4] = useState();
-  const [statusVal5, statusFilter5] = useState();
+  const status = [false, false, false, false, false];
+  const status1 = [false, false, false, false, false];
+  const ranges = [0, 0];
+  const statusFilter = (name, value) => {
+    status[Number(name)] = value;
+  };
+  const statusFilter1 = (name, value) => {
+    status1[Number(name)] = value;
+  };
+  const nameChange1 = (name, value) => {
+    ranges[Number(name)] = value;
+  };
   return (
     <Box mx={["16px", "16px", "16px", "40px"]}>
       {/* button in mobile view */}
@@ -261,26 +268,82 @@ function Dashboard(props) {
                       </Radio>
                     </RadioGroup>
                   </FormControl>
-                  <CheckboxGroup variantColor="green" defaultValue={["all"]}>
-                    <Box d="flex" mt={4}>
-                      <Checkbox value="custom" variantColor="green" mr={8}>
-                        CUSTOME
-                      </Checkbox>
-                      <Input variant="flushed" w="20%" mt={-4} />
-                      <Text mt={-4}>To</Text>
-                      <Input variant="flushed" w="20%" mt={-4} />
-                    </Box>
-                    <Checkbox value="all">ALL</Checkbox>
-                    <Checkbox value="one">10,000-19,000</Checkbox>
-                    <Checkbox value="two">20,000-49,000</Checkbox>
-                    <Checkbox value="three">50,000-1,00,000</Checkbox>
-                  </CheckboxGroup>
+                  <Box d="flex" mt={4}>
+                    <Checkbox
+                      mr={8}
+                      value="0"
+                      onChange={(event) =>
+                        statusFilter1(event.target.value, event.target.checked)
+                      }
+                    >
+                      CUSTOME
+                    </Checkbox>
+                    <Input
+                      variant="flushed"
+                      w="20%"
+                      mt={-4}
+                      name="0"
+                      onChange={(event) =>
+                        nameChange1(event.target.name, event.target.value)
+                      }
+                    />
+                    <Text mt={-4}>To</Text>
+                    <Input
+                      variant="flushed"
+                      w="20%"
+                      mt={-4}
+                      name="1"
+                      onChange={(event) =>
+                        nameChange1(event.target.name, event.target.value)
+                      }
+                    />
+                  </Box>
+                  <Checkbox
+                    value="1"
+                    onChange={(event) =>
+                      statusFilter1(event.target.value, event.target.checked)
+                    }
+                  >
+                    ALL
+                  </Checkbox>
+                  <br></br>
+                  <Checkbox
+                    value="2"
+                    onChange={(event) =>
+                      statusFilter1(event.target.value, event.target.checked)
+                    }
+                  >
+                    10,000-19,000
+                  </Checkbox>
+                  <br></br>
+                  <Checkbox
+                    value="3"
+                    onChange={(event) =>
+                      statusFilter1(event.target.value, event.target.checked)
+                    }
+                  >
+                    20,000-49,000
+                  </Checkbox>
+                  <br></br>
+                  <Checkbox
+                    value="4"
+                    onChange={(event) =>
+                      statusFilter1(event.target.value, event.target.checked)
+                    }
+                  >
+                    50,000-1,00,000
+                  </Checkbox>
                   <Button
                     backgroundColor="#112147"
                     width="100%"
                     border="1px solid white"
                     onClick={() =>
-                      props.onFilterChange(filterValname, filterValpledged)
+                      props.onFilterChange(
+                        filterValname,
+                        filterValpledged,
+                        status1,
+                        ranges
+                      )
                     }
                   >
                     APPLY
@@ -373,12 +436,12 @@ function Dashboard(props) {
                 </Box>
                 <Box my={4}>
                   <Text>
-                    {data.status === "Pledged"
+                    {data.status === "pledged"
                       ? "Pledged Date"
                       : "Recieved Date"}
                   </Text>
                   <Text mt={2}>
-                    {data.status === "Pledged"
+                    {data.status === "pledged"
                       ? data.pledgedDate
                       : data.recievedDate}
                   </Text>
@@ -491,21 +554,95 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <CheckboxGroup
-                        variantColor="green"
-                        defaultValue={["all"]}
+                      <Checkbox
+                        value="0"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
                       >
-                        <Checkbox value="custom">CUSTOME</Checkbox>
-                        <Box d="flex">
-                          <Input variant="flushed" w="40%" />
-                          <Text>To</Text>
-                          <Input variant="flushed" w="40%" />
-                        </Box>
-                        <Checkbox value="all">ALL</Checkbox>
-                        <Checkbox value="one">10,000-19,000</Checkbox>
-                        <Checkbox value="two">20,000-49,000</Checkbox>
-                        <Checkbox value="three">50,000-1,00,000</Checkbox>
-                      </CheckboxGroup>
+                        CUSTOME
+                      </Checkbox>
+                      <Box d="flex">
+                        <Input
+                          variant="flushed"
+                          w="40%"
+                          name="0"
+                          onChange={(event) =>
+                            nameChange1(event.target.name, event.target.value)
+                          }
+                        />
+                        <Text>To</Text>
+                        <Input
+                          variant="flushed"
+                          w="40%"
+                          name="1"
+                          onChange={(event) =>
+                            nameChange1(event.target.name, event.target.value)
+                          }
+                        />
+                      </Box>
+                      <Checkbox
+                        value="1"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        ALL
+                      </Checkbox>
+                      <Checkbox
+                        value="2"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        10,000-19,000
+                      </Checkbox>
+                      <Checkbox
+                        value="3"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        20,000-49,000
+                      </Checkbox>
+                      <Checkbox
+                        value="4"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        50,000-1,00,000
+                      </Checkbox>
+                      <Button
+                        backgroundColor="teal.500"
+                        width="100%"
+                        border="1px solid white"
+                        onClick={() =>
+                          props.onFilterChange(
+                            filterValname,
+                            filterValpledged,
+                            status1,
+                            ranges
+                          )
+                        }
+                      >
+                        APPLY
+                      </Button>
                     </PopoverBody>
                   </PopoverContent>
                 </Popover>
@@ -592,21 +729,88 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <CheckboxGroup
-                        variantColor="green"
-                        defaultValue={["all"]}
+                      <Checkbox
+                        value="0"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
                       >
-                        <Checkbox value="custom">CUSTOME</Checkbox>
-                        <Box d="flex">
-                          <Input variant="flushed" w="40%" />
-                          <Text>To</Text>
-                          <Input variant="flushed" w="40%" />
-                        </Box>
-                        <Checkbox value="all">ALL</Checkbox>
-                        <Checkbox value="one">10,000-19,000</Checkbox>
-                        <Checkbox value="two">20,000-49,000</Checkbox>
-                        <Checkbox value="three">50,000-1,00,000</Checkbox>
-                      </CheckboxGroup>
+                        CUSTOME
+                      </Checkbox>
+                      <Box d="flex">
+                        <Input
+                          variant="flushed"
+                          w="40%"
+                          name="0"
+                          onChange={(event) =>
+                            nameChange1(event.target.name, event.target.value)
+                          }
+                        />
+                        <Text>To</Text>
+                        <Input
+                          variant="flushed"
+                          w="40%"
+                          name="1"
+                          onChange={(event) =>
+                            nameChange1(event.target.name, event.target.value)
+                          }
+                        />
+                      </Box>
+                      <Checkbox
+                        value="1"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        ALL
+                      </Checkbox>
+                      <Checkbox
+                        value="2"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        10,000-19,000
+                      </Checkbox>
+                      <Checkbox
+                        value="3"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        20,000-49,000
+                      </Checkbox>
+                      <Checkbox
+                        value="4"
+                        onChange={(event) =>
+                          statusFilter1(
+                            event.target.value,
+                            event.target.checked
+                          )
+                        }
+                      >
+                        50,000-1,00,000
+                      </Checkbox>
+                      <Button
+                        backgroundColor="teal.500"
+                        width="100%"
+                        border="1px solid white"
+                        onClick={() => props.onFilterChange1(status1, ranges)}
+                      >
+                        APPLY
+                      </Button>
                     </PopoverBody>
                   </PopoverContent>
                 </Popover>
@@ -660,52 +864,56 @@ function Dashboard(props) {
                   >
                     <PopoverArrow />
                     <PopoverBody color="white">
-                      <CheckboxGroup
+                      {/* <CheckboxGroup
                         variantColor="green"
-                        defaultValue={["all"]}
+                        // defaultValue={["all"]}
+                      > */}
+                      <Checkbox
+                        value="0"
+                        onChange={(event) =>
+                          statusFilter(event.target.value, event.target.checked)
+                        }
                       >
-                        <Checkbox
-                          value="all"
-                          onChange={(event) =>
-                            statusFilter1(event.target.checked)
-                          }
-                        >
-                          ALL
-                        </Checkbox>
-                        <Checkbox
-                          value="recieved"
-                          onChange={(event) =>
-                            statusFilter2(event.target.checked)
-                          }
-                        >
-                          RECIEVED
-                        </Checkbox>
-                        <Checkbox
-                          value="pledged"
-                          onChange={(event) =>
-                            statusFilter3(event.target.checked)
-                          }
-                        >
-                          PLEDGED
-                        </Checkbox>
-                        <Checkbox
-                          value="increased"
-                          onChange={(event) =>
-                            statusFilter4(event.target.checked)
-                          }
-                        >
-                          INCREASED
-                        </Checkbox>
-                        <Checkbox
-                          value="reduced"
-                          onChange={(event) =>
-                            statusFilter5(event.target.checked)
-                          }
-                        >
-                          REDUCED
-                        </Checkbox>
-                      </CheckboxGroup>
-                      <Button backgroundColor="teal.500" ml={3}>
+                        ALL
+                      </Checkbox>
+                      <Checkbox
+                        value="1"
+                        onChange={(event) =>
+                          statusFilter(event.target.value, event.target.checked)
+                        }
+                      >
+                        RECIEVED
+                      </Checkbox>
+                      <Checkbox
+                        value="2"
+                        onChange={(event) =>
+                          statusFilter(event.target.value, event.target.checked)
+                        }
+                      >
+                        PLEDGED
+                      </Checkbox>
+                      <Checkbox
+                        value="3"
+                        onChange={(event) =>
+                          statusFilter(event.target.value, event.target.checked)
+                        }
+                      >
+                        INCREASED
+                      </Checkbox>
+                      <Checkbox
+                        value="4"
+                        onChange={(event) =>
+                          statusFilter(event.target.value, event.target.checked)
+                        }
+                      >
+                        REDUCED
+                      </Checkbox>
+                      {/* </CheckboxGroup> */}
+                      <Button
+                        backgroundColor="teal.500"
+                        ml={3}
+                        onClick={() => props.onApplyStatus(status)}
+                      >
                         APPLY
                       </Button>
                     </PopoverBody>
@@ -731,27 +939,31 @@ function Dashboard(props) {
                 </Text>
                 <Text textAlign="center">{data.pledgedAmount}</Text>
                 <Text>{data.pledgedDate}</Text>
-                <Text textAlign="center">{data.recievedAmount}</Text>
-                <Text>{data.recievedDate}</Text>
+                <Text textAlign="center">
+                  {data.recievedAmount !== null ? data.recievedAmount : "-"}
+                </Text>
+                <Text>
+                  {data.recievedDate !== null ? data.recievedDate : "-"}
+                </Text>
                 <Box d="flex">
                   {data.status === "pledged" ? (
                     <Box d="flex">
                       <Image src={PledgedIcon} mr={1} />
-                      <Text mt={1} color="#ED8F05">
+                      <Text mt={1} color="#ED8F05" mr={3}>
                         {data.status.toUpperCase()}
                       </Text>
                     </Box>
                   ) : data.status === "Recieved" ? (
                     <Box d="flex">
                       <Image src={RecievedIcon} mr={1} />
-                      <Text color="green.500" mt={1}>
+                      <Text color="green.500" mt={1} mr={3}>
                         {data.status.toUpperCase()}
                       </Text>
                     </Box>
                   ) : data.status === "Reduced" ? (
                     <Box d="flex">
                       <Image src={ReducedIcon} mr={1} />
-                      <Text color="#00B4BD" mt={1}>
+                      <Text color="#00B4BD" mt={1} mr={3}>
                         {data.status.toUpperCase()}
                       </Text>
                     </Box>

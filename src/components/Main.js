@@ -47,6 +47,8 @@ class Main extends Component {
       errornote: "",
       entry: false,
       amountCount: 0,
+      range1: 0,
+      range2: 0,
       pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       patternphone: /^\d{10}$/,
     };
@@ -134,7 +136,6 @@ class Main extends Component {
   };
   nameChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-    console.log(event.target.name, event.target.value);
   };
   changeHandle = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -272,6 +273,49 @@ class Main extends Component {
       })
       .catch((err) => console.log(err));
   };
+  onApplyStatus = (statusVal) => {
+    let status = [];
+    statusVal.forEach((data, id) => {
+      if (data) {
+        status.push(id);
+      }
+    });
+    console.log(status);
+    let result = [];
+    for (let i = 0; i < status.length; i++) {
+      if (status[i] === 0) {
+        this.getData1();
+        break;
+      } else if (status[i] === 1) {
+        this.state.array.forEach((data) => {
+          if (data.status === "Recieved") result.push(data);
+        });
+      } else if (status[i] === 2) {
+        this.state.array.forEach((data) => {
+          if (data.status === "pledged") result.push(data);
+        });
+      } else if (status[i] === 3) {
+        this.state.array.forEach((data) => {
+          if (data.status === "Increased") result.push(data);
+        });
+      } else {
+        this.state.array.forEach((data) => {
+          if (data.status === "Reduced") result.push(data);
+        });
+      }
+    }
+    console.log(result);
+    var resArr = [];
+    result.forEach(function (item) {
+      var i = resArr.findIndex((x) => x.userId === item.userId);
+      if (i <= -1) {
+        resArr.push(item);
+      }
+    });
+    this.setState({
+      cou: resArr,
+    });
+  };
   // search method
   searchEvent = (event) => {
     this.setState({ search: event.target.value }, () => {
@@ -302,9 +346,133 @@ class Main extends Component {
       }
     });
   };
-  onFilterChange = (name, pledged) => {
-    name === "nasci" ? this.nameAsci() : this.nameDsci();
-    pledged === "pasci" ? this.pledgedAsci() : this.pledgedDsci();
+  onFilterChange = (name, pledged, filter, ranges) => {
+    if (name !== undefined && pledged !== undefined) {
+      name === "nasci" ? this.nameAsci() : this.nameDsci();
+      pledged === "pasci" ? this.pledgedAsci() : this.pledgedDsci();
+    }
+    let status = [];
+    filter.forEach((data, id) => {
+      if (data) {
+        status.push(id);
+      }
+    });
+    console.log(status);
+    let result = [];
+    for (let i = 0; i < status.length; i++) {
+      if (status[i] === 1) {
+        this.getData1();
+        break;
+      } else if (status[i] === 0) {
+        console.log(this.state.range1, this.state.range2);
+        this.state.array.forEach((data) => {
+          if (
+            data.pledgedAmount > Number(ranges[0]) &&
+            data.pledgedAmount < Number(ranges[1])
+          )
+            result.push(data);
+        });
+      } else if (status[i] === 2) {
+        this.state.array.forEach((data) => {
+          if (data.pledgedAmount > 10000 && data.pledgedAmount < 19000)
+            result.push(data);
+        });
+      } else if (status[i] === 3) {
+        this.state.array.forEach((data) => {
+          if (data.pledgedAmount > 20000 && data.pledgedAmount < 49000)
+            result.push(data);
+        });
+      } else {
+        this.state.array.forEach((data) => {
+          if (data.pledgedAmount > 50000 && data.pledgedAmount < 100000)
+            result.push(data);
+        });
+      }
+    }
+    console.log(result);
+    var resArr = [];
+    result.forEach(function (item) {
+      var i = resArr.findIndex((x) => x.userId === item.userId);
+      if (i <= -1) {
+        resArr.push(item);
+      }
+    });
+    this.setState({
+      cou: resArr,
+    });
+  };
+  onFilterChange1 = (filter, ranges) => {
+    let status = [];
+    filter.forEach((data, id) => {
+      if (data) {
+        status.push(id);
+      }
+    });
+    console.log(status);
+    let result = [];
+    for (let i = 0; i < status.length; i++) {
+      if (status[i] === 1) {
+        this.getData1();
+        break;
+      } else if (status[i] === 0) {
+        console.log(this.state.range1, this.state.range2);
+        this.state.array.forEach((data) => {
+          if (
+            data.recievedAmount === null
+              ? 0
+              : data.recievedAmount > Number(ranges[0]) &&
+                data.recievedAmount === null
+              ? 0
+              : data.recievedAmount < Number(ranges[1])
+          )
+            result.push(data);
+        });
+      } else if (status[i] === 2) {
+        this.state.array.forEach((data) => {
+          if (
+            data.recievedAmount === null
+              ? 0
+              : data.recievedAmount > 10000 && data.recievedAmount === null
+              ? 0
+              : data.recievedAmount < 19000
+          )
+            result.push(data);
+        });
+      } else if (status[i] === 3) {
+        this.state.array.forEach((data) => {
+          if (
+            data.recievedAmount === null
+              ? 0
+              : data.recievedAmount > 20000 && data.recievedAmount === null
+              ? 0
+              : data.recievedAmount < 49000
+          )
+            result.push(data);
+        });
+      } else {
+        this.state.array.forEach((data) => {
+          if (
+            data.recievedAmount === null
+              ? 0
+              : data.recievedAmount > 50000 && data.recievedAmount === null
+              ? 0
+              : data.recievedAmount < 100000
+          )
+            result.push(data);
+        });
+      }
+    }
+    console.log(result);
+    var resArr = [];
+    result.forEach(function (item) {
+      var i = resArr.findIndex((x) => x.userId === item.userId);
+      if (i <= -1) {
+        resArr.push(item);
+      }
+    });
+    this.setState({
+      cou: resArr,
+    });
   };
   // deb form submit method
   onSubmit1 = (event) => {
@@ -414,8 +582,10 @@ class Main extends Component {
                   handlePageClick={this.handlePageClick}
                   onEdit={this.onEdit}
                   onFilterChange={this.onFilterChange}
-                  onDownClick={this.onDownClick}
+                  onFilterChange1={this.onFilterChange1}
                   onDelete={this.onDelete}
+                  onApplyStatus={this.onApplyStatus}
+                  nameChange={this.nameChange}
                 />
               </Route>
               <Route path="/newentry">
@@ -427,6 +597,7 @@ class Main extends Component {
                   nameChange={this.nameChange}
                   state={this.state}
                   onSubmit1={this.onSubmit1}
+                  onDownClick={this.onDownClick}
                 />
               </Route>
               <Route path="/submit">
