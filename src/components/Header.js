@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Image, Text, Icon } from "@chakra-ui/core";
+import { Box, Image, Text, Icon, Button } from "@chakra-ui/core";
 import logo from "../asserts/Logo.svg";
 import "../App.css";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
 
 function Header(props) {
   return (
@@ -37,13 +38,24 @@ function Header(props) {
                 fontFamily="Rubik-Medium"
                 fontSize="20px"
                 color="#FFFFFF"
-                mt="11px"
+                // mt="11px"
               >
                 Malla Reddy
               </Text>
               <Text fontFamily="Rubik-Regular" fontSize="16px" color="#FFFFFF">
                 CEO
               </Text>
+              <Link to="/">
+                <Button
+                  h={6}
+                  color="white"
+                  backgroundColor="#112147"
+                  justifyContent="left"
+                  ml={-4}
+                >
+                  LOGOUT
+                </Button>
+              </Link>
             </Box>
           </Box>
         </Box>
@@ -55,28 +67,39 @@ function Header(props) {
             borderRadius="50%"
             d={["flex", "flex", "flex", "none"]}
           />
-          <Box
-            d={["flex", "flex", "flex", "none"]}
-            float="right"
-            border="1px solid white"
-            color="white"
-            h={8}
-            mt={1}
-            mr="20px"
-            borderRadius="5px"
-          >
-            <ReactPaginate
-              previousLabel={<Icon name="chevron-left" />}
-              nextLabel={<Icon name="chevron-right" />}
-              breakLabel={"/ " + props.state.pageCount}
-              pageCount={props.state.pageCount}
-              marginPagesDisplayed={0}
-              pageRangeDisplayed={0}
-              onPageChange={props.handlePageClick}
-              containerClassName={"pagination"}
-              subContainerClassName={"pages pagination"}
-              activeClassName={"active"}
-            />
+          <Box d={["flex", "flex", "flex", "none"]} mt={1} mr="20px">
+            <Box
+              d={["flex", "flex", "flex", "none"]}
+              float="right"
+              border="1px solid white"
+              color="white"
+              h={8}
+              mr={2}
+              borderRadius="5px"
+            >
+              <ReactPaginate
+                previousLabel={<Icon name="chevron-left" />}
+                nextLabel={<Icon name="chevron-right" />}
+                breakLabel={"/ " + props.state.pageCount}
+                pageCount={props.state.pageCount}
+                marginPagesDisplayed={0}
+                pageRangeDisplayed={0}
+                onPageChange={props.handlePageClick}
+                containerClassName={"pagination"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"}
+              />
+            </Box>
+            <Link to="/">
+              <Button
+                h={8}
+                // border="1px solid white"
+                color="white"
+                backgroundColor="#112147"
+              >
+                Logout
+              </Button>
+            </Link>
           </Box>
         </Box>
       </Box>

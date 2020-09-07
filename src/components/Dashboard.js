@@ -463,7 +463,7 @@ function Dashboard(props) {
               w="100%"
               h="50px"
               fontSize="14px"
-              templateColumns="repeat(8, 1fr)"
+              templateColumns="repeat(9, 1fr)"
               gap={2}
               backgroundColor="#112147"
               color="white"
@@ -510,7 +510,7 @@ function Dashboard(props) {
                 <Text>PLEDGED AMOUNT</Text>
                 <Popover>
                   <PopoverTrigger>
-                    <Button backgroundColor="#112147" mt={-1} size="sm">
+                    <Button backgroundColor="#112147" mt={1} size="sm">
                       <Image src={Sort}></Image>
                     </Button>
                   </PopoverTrigger>
@@ -685,7 +685,7 @@ function Dashboard(props) {
                 <Text>RECIEVED AMOUNT</Text>
                 <Popover>
                   <PopoverTrigger>
-                    <Button backgroundColor="#112147" mt={-1} size="sm">
+                    <Button backgroundColor="#112147" mt={1} size="sm">
                       <Image src={Sort}></Image>
                     </Button>
                   </PopoverTrigger>
@@ -849,6 +849,7 @@ function Dashboard(props) {
                   </PopoverContent>
                 </Popover>
               </Box>
+              <Text>COMMENT</Text>
               <Box d="flex">
                 <Text>STATUS</Text>
                 <Popover>
@@ -927,7 +928,7 @@ function Dashboard(props) {
                 key={idx}
                 w="100%"
                 fontSize="14px"
-                templateColumns="repeat(8, 1fr)"
+                templateColumns="repeat(9, 1fr)"
                 gap={2}
                 alignItems="center"
                 h="40px"
@@ -937,14 +938,15 @@ function Dashboard(props) {
                 <Text overflow="hidden" textOverflow="ellipsis">
                   {data.email}
                 </Text>
-                <Text textAlign="center">{data.pledgedAmount}</Text>
+                <Text>{data.pledgedAmount}</Text>
                 <Text>{data.pledgedDate}</Text>
-                <Text textAlign="center">
+                <Text>
                   {data.recievedAmount !== null ? data.recievedAmount : "-"}
                 </Text>
                 <Text>
                   {data.recievedDate !== null ? data.recievedDate : "-"}
                 </Text>
+                <Text>{data.notes !== null ? data.notes : "-"}</Text>
                 <Box d="flex">
                   {data.status === "pledged" ? (
                     <Box d="flex">

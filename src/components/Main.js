@@ -47,8 +47,9 @@ class Main extends Component {
       errornote: "",
       entry: false,
       amountCount: 0,
-      range1: 0,
-      range2: 0,
+      // status: [false, false, false, false, false],
+      // status1: [false, false, false, false, false],
+      // ranges: [0, 0],
       pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       patternphone: /^\d{10}$/,
     };
@@ -58,6 +59,7 @@ class Main extends Component {
     console.log("hfg");
     this.setState({ amountCount: Number(this.state.amountCount) + 1 });
   };
+
   // page change method
   handlePageClick = (e) => {
     const selectedPage = e.selected;
@@ -129,7 +131,9 @@ class Main extends Component {
         phone: data[0].phone,
         email: data[0].email,
         userid: data[0].userId,
+        amountCount: data[0].pledgedAmount / 1000,
         edit: true,
+        editone: true,
       },
       () => console.log(this.state.userid)
     );
@@ -140,6 +144,30 @@ class Main extends Component {
   changeHandle = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
+  // statusFilter = (name, value) => {
+  //   this.setState(
+  //     (state) => {
+  //       this.state.status[Number(name)] = value;
+  //     },
+  //     () => console.log(this.state.status)
+  //   );
+  // };
+  // statusFilter1 = (name, value) => {
+  //   this.setState(
+  //     (state) => {
+  //       this.state.status1[Number(name)] = value;
+  //     },
+  //     () => console.log(this.state.status1)
+  //   );
+  // };
+  // nameChange1 = (name, value) => {
+  //   this.setState(
+  //     (state) => {
+  //       this.state.ranges[Number(name)] = value;
+  //     },
+  //     () => console.log(this.state.ranges)
+  //   );
+  // };
   // sorting the names
   nameAsci = () => {
     this.setState(
@@ -257,21 +285,29 @@ class Main extends Component {
   // login form method
   btnClick = (event) => {
     event.preventDefault();
-    Axios.post("http://localhost:2733/login", {
-      userName: this.state.userName,
-      password: this.state.password,
-    })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data === "You don't have a account") {
-          this.setState({ errorum: "incorrect username" });
-        } else if (res.data === "Invalid credentials") {
-          this.setState({ errorpm: "incorrect password", errorum: "" });
-        } else {
-          this.setState({ log: true, errorpm: "" });
-        }
-      })
-      .catch((err) => console.log(err));
+    if (this.state.userName.length !== 0) {
+      if (this.state.password.length !== 0) {
+        Axios.post("http://localhost:2733/login", {
+          userName: this.state.userName,
+          password: this.state.password,
+        })
+          .then((res) => {
+            console.log(res.data);
+            if (res.data === "You don't have a account") {
+              this.setState({ errorum: "incorrect username" });
+            } else if (res.data === "Invalid credentials") {
+              this.setState({ errorpm: "incorrect password", errorum: "" });
+            } else {
+              this.setState({ log: true, errorpm: "" });
+            }
+          })
+          .catch((err) => console.log(err));
+      } else {
+        this.setState({ errorpm: "Please enter password", errorum: "" });
+      }
+    } else {
+      this.setState({ errorum: "Please enter username" });
+    }
   };
   onApplyStatus = (statusVal) => {
     let status = [];
@@ -493,6 +529,7 @@ class Main extends Component {
                     email: this.state.email,
                     deb_type: this.state.type,
                     deb_amount: this.state.amountCount * 1000 + 10000,
+                    notes: this.state.notes,
                   }
                 )
                   .then((res) => {
@@ -586,6 +623,9 @@ class Main extends Component {
                   onDelete={this.onDelete}
                   onApplyStatus={this.onApplyStatus}
                   nameChange={this.nameChange}
+                  statusFilter={this.statusFilter}
+                  statusFilter1={this.statusFilter1}
+                  nameChange1={this.nameChange1}
                 />
               </Route>
               <Route path="/newentry">

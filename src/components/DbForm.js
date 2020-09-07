@@ -21,9 +21,6 @@ import {
 import Cross from "../asserts/Cross.svg";
 function DbForm(props) {
   useEffect(() => {
-    props.state.edit
-      ? (props.state.editone = true)
-      : (props.state.editone = false);
     props.state.edit = false;
   }, []);
   return (
@@ -124,12 +121,24 @@ function DbForm(props) {
               value={props.type}
               defaultValue="0"
               spacing={[2, 2, 2, 10]}
-              isInline={[false, false, false, true]}
+              d="flex"
+              flexDirection={["column", "column", "column", "row"]}
             >
-              <Radio variantColor="green" value="book" mt={-4}>
+              <Radio
+                variantColor="green"
+                value="book"
+                mt={-4}
+                mr={6}
+                isDisabled={props.state.editone ? true : false}
+              >
                 Book Debenture
               </Radio>
-              <Radio variantColor="green" value="purchase" mt={-4}>
+              <Radio
+                variantColor="green"
+                value="purchase"
+                mt={-4}
+                isDisabled={props.state.editone ? false : true}
+              >
                 Purchase Debenture
               </Radio>
             </RadioGroup>
@@ -174,6 +183,7 @@ function DbForm(props) {
                 type="number"
                 _readOnly
                 value={props.state.amountCount * 1000}
+                onChange={props.nameChange}
               />
             </Box>
           </FormControl>
@@ -182,7 +192,7 @@ function DbForm(props) {
               <Text color="grey.200" mt={6} opacity="0.45">
                 NOTES
               </Text>
-              <Textarea name="notes"></Textarea>
+              <Textarea name="notes" onChange={props.nameChange}></Textarea>
             </Box>
           ) : (
             ""
