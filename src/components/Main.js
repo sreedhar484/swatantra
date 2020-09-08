@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Stack, Box } from "@chakra-ui/core";
 import "../App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -93,6 +98,18 @@ class Main extends Component {
       .then((res) => {
         console.log(res.data);
         if (res.data.length !== 0) {
+          this.setState({ array: res.data, cou: res.data }, () => {
+            this.setState({
+              totalpledged: this.state.array
+                .map((data) => data.pledgedAmount)
+                .reduce((a, b) => a + b),
+            });
+            this.setState({
+              totalrecieved: this.state.array
+                .map((data) => (data.recievedAmount ? data.recievedAmount : 0))
+                .reduce((a, b) => a + b),
+            });
+          });
           this.getData(res.data);
         }
       })
@@ -105,18 +122,18 @@ class Main extends Component {
       this.state.offset,
       this.state.offset + this.state.perPage
     );
-    this.setState({ array: data, cou: data }, () => {
-      this.setState({
-        totalpledged: this.state.array
-          .map((data) => data.pledgedAmount)
-          .reduce((a, b) => a + b),
-      });
-      this.setState({
-        totalrecieved: this.state.array
-          .map((data) => (data.recievedAmount ? data.recievedAmount : 0))
-          .reduce((a, b) => a + b),
-      });
-    });
+    // this.setState({ array: data, cou: data }, () => {
+    //   this.setState({
+    //     totalpledged: this.state.array
+    //       .map((data) => data.pledgedAmount)
+    //       .reduce((a, b) => a + b),
+    //   });
+    //   this.setState({
+    //     totalrecieved: this.state.array
+    //       .map((data) => (data.recievedAmount ? data.recievedAmount : 0))
+    //       .reduce((a, b) => a + b),
+    //   });
+    // });
     this.setState({
       pageCount: Math.ceil(tdata.length / this.state.perPage),
       cou: slice,
@@ -348,9 +365,10 @@ class Main extends Component {
         resArr.push(item);
       }
     });
-    this.setState({
-      cou: resArr,
-    });
+    // this.setState({
+    //   cou: resArr,
+    // });
+    this.getData(resArr);
   };
   // search method
   searchEvent = (event) => {
@@ -372,10 +390,12 @@ class Main extends Component {
             resArr.push(item);
           }
         });
-        this.setState({
-          search1: false,
-          cou: resArr,
-        });
+        this.setState(
+          {
+            search1: false,
+          },
+          () => this.getData(resArr)
+        );
       } else {
         this.setState({ search1: true });
         this.getData1();
@@ -433,9 +453,10 @@ class Main extends Component {
         resArr.push(item);
       }
     });
-    this.setState({
-      cou: resArr,
-    });
+    // this.setState({
+    //   cou: resArr,
+    // });
+    this.getData(resArr);
   };
   onFilterChange1 = (filter, ranges) => {
     let status = [];
@@ -509,6 +530,9 @@ class Main extends Component {
     this.setState({
       cou: resArr,
     });
+  };
+  onLogout = () => {
+    this.setState({ log: false }, () => <Redirect to="/" />);
   };
   // deb form submit method
   onSubmit1 = (event) => {
@@ -599,53 +623,74 @@ class Main extends Component {
                 />
               </Route>
               <Route exact path="/dashboard">
-                <Header
-                  handlePageClick={this.handlePageClick}
-                  state={this.state}
-                />
-                <Dashboard
-                  state={this.state}
-                  searchEvent={this.searchEvent}
-                  nameAsci={this.nameAsci}
-                  nameDsci={this.nameDsci}
-                  pledgedAsci={this.pledgedAsci}
-                  pledgedDsci={this.pledgedDsci}
-                  pledgedDateAsci={this.pledgedDateAsci}
-                  pledgedDateDsci={this.pledgedDateDsci}
-                  recievedAsci={this.recievedAsci}
-                  recievedDsci={this.recievedDsci}
-                  recievedDateAsci={this.recievedDateAsci}
-                  recievedDateDsci={this.recievedDateDsci}
-                  handlePageClick={this.handlePageClick}
-                  onEdit={this.onEdit}
-                  onFilterChange={this.onFilterChange}
-                  onFilterChange1={this.onFilterChange1}
-                  onDelete={this.onDelete}
-                  onApplyStatus={this.onApplyStatus}
-                  nameChange={this.nameChange}
-                  statusFilter={this.statusFilter}
-                  statusFilter1={this.statusFilter1}
-                  nameChange1={this.nameChange1}
-                />
+                {this.state.log ? (
+                  <div>
+                    <Header
+                      handlePageClick={this.handlePageClick}
+                      state={this.state}
+                      onLogout={this.onLogout}
+                    />
+                    <Dashboard
+                      state={this.state}
+                      searchEvent={this.searchEvent}
+                      nameAsci={this.nameAsci}
+                      nameDsci={this.nameDsci}
+                      pledgedAsci={this.pledgedAsci}
+                      pledgedDsci={this.pledgedDsci}
+                      pledgedDateAsci={this.pledgedDateAsci}
+                      pledgedDateDsci={this.pledgedDateDsci}
+                      recievedAsci={this.recievedAsci}
+                      recievedDsci={this.recievedDsci}
+                      recievedDateAsci={this.recievedDateAsci}
+                      recievedDateDsci={this.recievedDateDsci}
+                      handlePageClick={this.handlePageClick}
+                      onEdit={this.onEdit}
+                      onFilterChange={this.onFilterChange}
+                      onFilterChange1={this.onFilterChange1}
+                      onDelete={this.onDelete}
+                      onApplyStatus={this.onApplyStatus}
+                      nameChange={this.nameChange}
+                      statusFilter={this.statusFilter}
+                      statusFilter1={this.statusFilter1}
+                      nameChange1={this.nameChange1}
+                    />
+                  </div>
+                ) : (
+                  <Redirect to="/" />
+                )}
               </Route>
               <Route path="/newentry">
-                <Header
-                  handlePageClick={this.handlePageClick}
-                  state={this.state}
-                />
-                <DbForm
-                  nameChange={this.nameChange}
-                  state={this.state}
-                  onSubmit1={this.onSubmit1}
-                  onDownClick={this.onDownClick}
-                />
+                {this.state.log ? (
+                  <div>
+                    <Header
+                      handlePageClick={this.handlePageClick}
+                      state={this.state}
+                      onLogout={this.onLogout}
+                    />
+                    <DbForm
+                      nameChange={this.nameChange}
+                      state={this.state}
+                      onSubmit1={this.onSubmit1}
+                      onDownClick={this.onDownClick}
+                    />
+                  </div>
+                ) : (
+                  <Redirect to="/" />
+                )}
               </Route>
               <Route path="/submit">
-                <Header
-                  handlePageClick={this.handlePageClick}
-                  state={this.state}
-                />
-                <Submit state={this.state} />
+                {this.state.log ? (
+                  <div>
+                    <Header
+                      handlePageClick={this.handlePageClick}
+                      state={this.state}
+                      onLogout={this.onLogout}
+                    />
+                    <Submit state={this.state} />
+                  </div>
+                ) : (
+                  <Redirect to="/" />
+                )}
               </Route>
             </Switch>
           </Router>

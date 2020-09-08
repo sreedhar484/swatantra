@@ -16,7 +16,6 @@ import {
   InputRightElement,
   Icon,
   Image,
-  IconButton,
 } from "@chakra-ui/core";
 import Cross from "../asserts/Cross.svg";
 function DbForm(props) {

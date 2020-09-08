@@ -3,7 +3,6 @@ import { Box, Image, Text, Icon, Button } from "@chakra-ui/core";
 import logo from "../asserts/Logo.svg";
 import "../App.css";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
 
 function Header(props) {
   return (
@@ -40,22 +39,21 @@ function Header(props) {
                 color="#FFFFFF"
                 // mt="11px"
               >
-                Malla Reddy
+                {props.state.userName}
               </Text>
               <Text fontFamily="Rubik-Regular" fontSize="16px" color="#FFFFFF">
                 CEO
               </Text>
-              <Link to="/">
-                <Button
-                  h={6}
-                  color="white"
-                  backgroundColor="#112147"
-                  justifyContent="left"
-                  ml={-4}
-                >
-                  LOGOUT
-                </Button>
-              </Link>
+              <Button
+                h={6}
+                color="white"
+                backgroundColor="#112147"
+                justifyContent="left"
+                ml={-4}
+                onClick={props.onLogout}
+              >
+                LOGOUT
+              </Button>
             </Box>
           </Box>
         </Box>
@@ -90,16 +88,15 @@ function Header(props) {
                 activeClassName={"active"}
               />
             </Box>
-            <Link to="/">
-              <Button
-                h={8}
-                // border="1px solid white"
-                color="white"
-                backgroundColor="#112147"
-              >
-                Logout
-              </Button>
-            </Link>
+            <Button
+              h={8}
+              // border="1px solid white"
+              color="white"
+              backgroundColor="#112147"
+              onClick={props.onLogout}
+            >
+              Logout
+            </Button>
           </Box>
         </Box>
       </Box>

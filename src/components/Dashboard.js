@@ -22,7 +22,6 @@ import {
   DrawerOverlay,
   Checkbox,
   useDisclosure,
-  CheckboxGroup,
   FormControl,
   FormLabel,
   RadioGroup,
