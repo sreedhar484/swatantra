@@ -1,104 +1,148 @@
 import React from "react";
-import { Box, Image, Text, Icon, Button } from "@chakra-ui/core";
-import logo from "../asserts/Logo.svg";
+import {
+  Box,
+  Text,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useDisclosure,
+  Icon,
+  Image,
+  // useColorMode,
+  // useTheme,
+  Divider,
+} from "@chakra-ui/core";
 import "../App.css";
-import ReactPaginate from "react-paginate";
+import {
+  BsList,
+  BsBookmark,
+  BsPeople,
+  BsLock,
+  BsPerson,
+  BsGear,
+  BsPersonPlus,
+} from "react-icons/bs";
+import { AiOutlineNotification, AiOutlineQuestionCircle } from "react-icons/ai";
+import { HiOutlinePhone } from "react-icons/hi";
+import { useHistory } from "react-router-dom";
+import Cookie from "js-cookie";
 
-function Header(props) {
+function Header() {
+  // const { colorMode, toggleColorMode } = useColorMode();
+  const history = useHistory();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <div className="header">
       <Box
-        h={["60px", "60px", "60px", "106px"]}
+        h={["50px", "50px", "50px", "80px"]}
         w="100%"
         backgroundColor="#112147"
-        borderRadius={["0px", "0px", "0px", "0px"]}
       >
-        <Box
-          py={4}
-          ml="10px"
-          mr="40px"
-          d={["none", "none", "none", "flex"]}
-          justifyContent="space-between"
-        >
-          <Box>
-            <Image src={logo} ml="30px" />
+        <Box d="flex" justifyContent="space-between" pl="20px" pr="10px">
+          <Box mt={["10px", "10px", "10px", "20px"]} d="flex">
+            <Image
+              w="30px"
+              h="30px"
+              border="1px solid white"
+              borderRadius="50%"
+              src={`http://localhost:1234/${Cookie.get("userImage")}`}
+              onClick={onOpen}
+            />
+            <Text color="white" ml={["20px", "20px", "35px", "50px"]}>
+              {Cookie.get("userName")}
+            </Text>
           </Box>
-          <Box d="flex">
-            <Box my="7px" w="80px">
+          <Button
+            backgroundColor="#112147"
+            mt={["5px", "5px", "5px", "25px"]}
+            onClick={() => history.push("/search")}
+          >
+            <Icon
+              name="search"
+              color="white"
+              size={["25px", "25px", "30px", "40px"]}
+            />
+          </Button>
+        </Box>
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          size={["xs", "sm", "lg", "xl"]}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton color="white" />
+            <DrawerHeader backgroundColor="#112147">
               <Image
-                w="60px"
-                h="60px"
                 border="1px solid white"
                 borderRadius="50%"
+                w="50px"
+                h="50px"
+                src={`http://localhost:1234/${Cookie.get("userImage")}`}
+                mb={2}
               />
-            </Box>
-            <Box>
-              <Text
-                fontFamily="Rubik-Medium"
-                fontSize="20px"
-                color="#FFFFFF"
-                // mt="11px"
-              >
-                {props.state.userName}
-              </Text>
-              <Text fontFamily="Rubik-Regular" fontSize="16px" color="#FFFFFF">
-                CEO
-              </Text>
-              <Button
-                h={6}
-                color="white"
-                backgroundColor="#112147"
-                justifyContent="left"
-                ml={-4}
-                onClick={props.onLogout}
-              >
-                LOGOUT
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-        <Box py="12px" ml="16px" d="flex" justifyContent="space-between">
-          <Image
-            w="36px"
-            h="36px"
-            border="1px solid white"
-            borderRadius="50%"
-            d={["flex", "flex", "flex", "none"]}
-          />
-          <Box d={["flex", "flex", "flex", "none"]} mt={1} mr="20px">
-            <Box
-              d={["flex", "flex", "flex", "none"]}
-              float="right"
-              border="1px solid white"
-              color="white"
-              h={8}
-              mr={2}
-              borderRadius="5px"
-            >
-              <ReactPaginate
-                previousLabel={<Icon name="chevron-left" />}
-                nextLabel={<Icon name="chevron-right" />}
-                breakLabel={"/ " + props.state.pageCount}
-                pageCount={props.state.pageCount}
-                marginPagesDisplayed={0}
-                pageRangeDisplayed={0}
-                onPageChange={props.handlePageClick}
-                containerClassName={"pagination"}
-                subContainerClassName={"pages pagination"}
-                activeClassName={"active"}
-              />
-            </Box>
-            <Button
-              h={8}
-              // border="1px solid white"
-              color="white"
-              backgroundColor="#112147"
-              onClick={props.onLogout}
-            >
-              Logout
-            </Button>
-          </Box>
-        </Box>
+              <Text color="white">{Cookie.get("userName")}</Text>
+              {/* <IconButton
+                icon={colorMode === "light" ? "moon" : "sun"}
+                onClick={toggleColorMode}
+              ></IconButton> */}
+            </DrawerHeader>
+            <DrawerBody>
+              <Box d="flex" flexDirection="column">
+                <Button
+                  variant="unstyled"
+                  d="flex"
+                  justifyContent="flex-start"
+                  onClick={() => history.push("/newgroup")}
+                >
+                  <BsPeople />
+                  New Group
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <BsLock />
+                  New Secret Chat
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <AiOutlineNotification />
+                  New Channel
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <BsPerson />
+                  Contacts
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <HiOutlinePhone />
+                  Calls
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <BsBookmark />
+                  Saved Messages
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <BsGear />
+                  Settings
+                </Button>
+                <Divider />
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <BsPersonPlus />
+                  Invite Friends
+                </Button>
+                <Button variant="unstyled" d="flex" justifyContent="flex-start">
+                  <AiOutlineQuestionCircle />
+                  Faq
+                </Button>
+              </Box>
+            </DrawerBody>
+
+            <DrawerFooter></DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </Box>
     </div>
   );

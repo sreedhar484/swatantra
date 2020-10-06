@@ -1,3 +1,4 @@
+import logo from "../asserts/Loglogo.svg";
 import logbackground from "../asserts/Logbackground.svg";
 import {
   Box,
@@ -8,54 +9,67 @@ import {
   Text,
   Button,
 } from "@chakra-ui/core";
-import Cookie from "js-cookie";
 import Axios from "axios";
 import { Redirect, Link } from "react-router-dom";
 import React, { Component } from "react";
 
-export class Login extends Component {
+export class Register extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       userName: "",
       password: "",
-      errorum: "",
-      errorpm: "",
-      log: false,
+      password1: "",
       erroru: false,
       errorp: false,
+      errorp1: false,
+      errorum: "",
+      errorpm: "",
+      errorpm1: "",
+      reg: false,
+      file: null,
     };
   }
   changeHandle = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+    this.setState({ [event.target.name]: event.target.value})
   };
-  btnClick = (event) => {
+  changeHandle1 = (event) => {
+    this.setState({ [event.target.name]: event.target.files[0] });
+  };
+  btnClick1 = (event) => {
     event.preventDefault();
     if (this.state.userName.length !== 0) {
       if (this.state.password.length !== 0) {
-        Axios.post("http://localhost:1234/login", {
-          userName: this.state.userName,
-          password: this.state.password,
-        })
-          .then((res) => {
-            console.log(res);
-            if (res.data === "You don't have a account") {
-              this.setState({ errorum: "incorrect username" });
-            } else if (res.data === "Invalid credentials") {
-              this.setState({ errorpm: "incorrect password", errorum: "" });
-            } else {
-              this.setState(
-                { log: true, errorpm: "", userName: "", password: "" },
-                () => {
-                  Cookie.set("userName", res.data.userName);
-                  Cookie.set("userId", res.data.userId);
-                  Cookie.set("userImage", res.data.userImage);
-                }
-              );
-            }
-          })
-          .catch((err) => console.log(err));
+        if (this.state.password1.length !== 0) {
+          const formData = new FormData();
+          formData.append("userName", this.state.userName);
+          formData.append("pwd1", this.state.password);
+          formData.append("pwd2", this.state.password1);
+          formData.append("users", null);
+          formData.append("type", "user");
+          formData.append("userImage", this.state.file);
+          console.log(formData)
+          Axios.post("http://localhost:1234/register",formData)
+            .then((res) => {
+              console.log(res.data);
+              if (res.data === "Password doesn't match") {
+                this.setState({
+                  errorpm1: "incorrect username",
+                  errorum: "",
+                  errorpm: "",
+                  userName: "",
+                  password: "",
+                  password1: "",
+                });
+              } else {
+                this.setState({ reg: true, errorpm1: "" });
+              }
+            })
+            .catch((err) => console.log(err));
+        } else {
+          this.setState({ errorpm1: "Please confirm password", errorpm: "" });
+        }
       } else {
         this.setState({ errorpm: "Please enter password", errorum: "" });
       }
@@ -78,13 +92,12 @@ export class Login extends Component {
             py={["22%", "22%", "22%", "34%"]}
             px={["15%", "20%", "30%", "35%"]}
           >
-            <Text
-              fontSize="30px"
+            <Image
+              src={logo}
+              alt="logo"
               w={["244px", "244px", "244px", "349px"]}
               h={["74px", "74px", "74px", "104px"]}
-            >
-              NANDU
-            </Text>
+            />
           </Box>
         </Box>
         <Box
@@ -101,17 +114,18 @@ export class Login extends Component {
             <Image src={logbackground} alt="background" float="right"></Image>
           </Box>
           <Box mx={["25px", "25px", "25px", "40px"]}>
-            <form onSubmit={this.btnClick}>
+            <form onSubmit={this.btnClick1}>
               <Text
                 fontSize="30px"
+                // fontFamily="NotoSansJP-Bold"
                 color="#7EAACD"
                 fontWeight="bold"
                 letterSpacing="1.2px"
                 mt="20%"
               >
-                LOGIN
+                REGISTER
               </Text>
-              <FormControl mt="12%">
+              <FormControl mt="6%">
                 <Input
                   variant="flushed"
                   type="text"
@@ -128,7 +142,7 @@ export class Login extends Component {
                   {this.state.errorum}
                 </FormHelperText>
               </FormControl>
-              <FormControl mt="14%">
+              <FormControl mt="7%">
                 <Input
                   type="password"
                   variant="flushed"
@@ -145,8 +159,32 @@ export class Login extends Component {
                   {this.state.errorpm}
                 </FormHelperText>
               </FormControl>
-              {this.state.log ? (
-                <Redirect to="/main" />
+              <FormControl mt="7%">
+                <Input
+                  type="password"
+                  variant="flushed"
+                  placeholder="CONFIRM PASSWORD"
+                  name="password1"
+                  value={this.state.password1}
+                  onChange={this.changeHandle}
+                  borderColor={
+                    this.state.errorp1 ? "crimson" : "rgba(255,255,255,0.24)"
+                  }
+                  focusBorderColor={this.state.errorp1 ? "crimson" : "#2A69AC"}
+                ></Input>
+                <FormHelperText color="red.500">
+                  {this.state.errorpm1}
+                </FormHelperText>
+              </FormControl>
+              <Input
+                type="file"
+                name="file"
+                variant="flushed"
+                backgroundColor="#112147"
+                onChange={this.changeHandle1}
+              />
+              {this.state.reg ? (
+                <Redirect to="/" />
               ) : (
                 <Button
                   type="submit"
@@ -159,12 +197,12 @@ export class Login extends Component {
                   width="114px"
                   h="44px"
                 >
-                  Login
+                  REGISTER
                 </Button>
               )}
             </form>
-            <Link to="/register">
-              <Text mb="16%">Don't have an account</Text>
+            <Link to="/">
+              <Text mb="16%">Already have an account</Text>
             </Link>
           </Box>
         </Box>
@@ -173,4 +211,4 @@ export class Login extends Component {
   }
 }
 
-export default Login;
+export default Register;

@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
-.App {
+* {
   font-family: "Nunito";
 }
 .header {
@@ -7,31 +7,11 @@
   position: sticky;
   z-index: 1000;
 }
-.pagination {
+.footer {
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+}
+.css-6qsuox{
   display: flex;
-  list-style: none;
-  outline: none;
-  /* border-color: blue; */
-}
-.pagination > li > a {
-  margin-top: "10px";
-  /* border-bottom: 1px solid blue; */
-  padding: 3px 5px;
-  outline: none;
-  cursor: pointer;
-}
-.pagination > .active > a,
-.pagination > .active > span,
-.pagination > .active > a:hover,
-.pagination > .active > span:hover,
-.pagination > .active > a:focus,
-.pagination > .active > span:focus {
-  outline: none;
-  text-decoration: underline;
-}
-.pagination > li:first-child > a,
-.pagination > li:first-child > span,
-.pagination > li:last-child > a,
-.pagination > li:last-child > span {
-  border-radius: unset;
 }
