@@ -7,7 +7,7 @@ function Content(props) {
   const [arr, setarr] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    Axios.get("http://localhost:1234/user/chat")
+    Axios.get("https://chatapisree.herokuapp.com/user/chat")
       .then((res) => {
         let data3 = res.data;
         data3 = data3.map((data4) =>
@@ -18,7 +18,7 @@ function Content(props) {
             : ""
         );
 
-        Axios.get("http://localhost:1234/user")
+        Axios.get("https://chatapisree.herokuapp.com/user")
           .then((res) => {
             let data1 = res.data;
             data1 = data1.filter((data) => {
@@ -63,7 +63,7 @@ function Content(props) {
             borderRadius="50%"
             w="50px"
             h="50px"
-            src={`http://localhost:1234/${data.userImage}`}
+            src={`https://chatapisree.herokuapp.com/${data.userImage}`}
           />
           <Box ml={4}>
             <Text fontWeight="bold">{data.userName}</Text>
