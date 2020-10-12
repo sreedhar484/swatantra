@@ -23,16 +23,20 @@ export class Main extends Component {
     super(props)
   
     this.state = {
-       log:true,
+       log:false,
     }
   }
   componentDidMount(){
+    console.log(this.state.log)
     if (Cookie.get("userName") !== undefined) {
       this.logStatus()
     }
   }
   logStatus=()=>{
-    this.setState({ log: true });
+    this.setState({ log: true },()=>console.log(this.state.log));
+  }
+  logoutStatus=()=>{
+    this.setState({ log: false },()=>console.log(this.state.log));
   }
   render() {
     return (
@@ -48,24 +52,24 @@ export class Main extends Component {
             </Route>
             
             <Route exact path="/main">
-              {this.state.log?<div><Header />
+              {this.state.log||Cookie.get("userName")!==undefined?<div><Header logoutStatus={this.logoutStatus} />
               <Content /></div>:<Redirect to="/"/>}
               
             </Route>
             <Route exact path="/search">
-              {this.state.log?<div><Search /></div>:<Redirect to="/"/>}
+              {this.state.log||Cookie.get("userName")!==undefined?<div><Search /></div>:<Redirect to="/"/>}
               
             </Route>
             <Route exact path="/main/id">
-              {this.state.log?<div><ContactDetails /></div>:<Redirect to="/"/>}
+              {this.state.log||Cookie.get("userName")!==undefined?<div><ContactDetails /></div>:<Redirect to="/"/>}
               
             </Route>
             <Route exact path="/main/id/video">
-              {this.state.log?<div><VideoCall/></div>:<Redirect to="/"/>}
+              {this.state.log||Cookie.get("userName")!==undefined?<div><VideoCall/></div>:<Redirect to="/"/>}
               
             </Route>
             <Route exact path="/newgroup">
-              {this.state.log?<div><NewGroup/></div>:<Redirect to="/"/>}
+              {this.state.log||Cookie.get("userName")!==undefined?<div><NewGroup/></div>:<Redirect to="/"/>}
               
             </Route>
             <Route

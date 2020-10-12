@@ -32,7 +32,7 @@ import { HiOutlinePhone } from "react-icons/hi";
 import { useHistory } from "react-router-dom";
 import Cookie from "js-cookie";
 
-function Header() {
+function Header(props) {
   // const { colorMode, toggleColorMode } = useColorMode();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -122,9 +122,21 @@ function Header() {
                   Faq
                 </Button>
               </Box>
+              <Button variant="unstyled" d="flex" justifyContent="flex-start" onClick={()=>{
+                Cookie.remove("userImage");
+                Cookie.remove("userId");
+                Cookie.remove("userName");
+                Cookie.remove("userClick");
+                history.push("/")
+                props.logoutStatus();
+              }}>
+                  Logout
+                </Button>
             </DrawerBody>
 
-            <DrawerFooter></DrawerFooter>
+            <DrawerFooter>
+
+            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       </Box>

@@ -39,6 +39,8 @@ import Cookie from "js-cookie";
 import "../App.css";
 import Dropzone from "react-dropzone";
 import Axios from "axios";
+import ReactMic from "react-mic";
+import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 function ContactDetails(props) {
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -49,6 +51,13 @@ function ContactDetails(props) {
   const [editMessage, setEditMessage] = useState("");
   const [groupInfo, setGroupInfo] = useState([]);
   const [edit, setEdit] = useState(-1);
+  const [emoji, setEmoji] = useState(false);
+  const [record, setRecord] = useState(false);
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+    const onEmojiClick = (event, emojiObject) => {
+        const message = msg+emojiObject.emoji;
+        setmsg(message);
+    }
   const open = (idx) => {
     setEdit(idx);
   };
@@ -132,6 +141,9 @@ function ContactDetails(props) {
   const changeHandle = (event) => {
     setmsg(event.target.value);
   };
+  const clickEmoji=()=>{
+    setEmoji(!emoji);
+  }
   const editMsg = (id) => {
     socket.emit("edit chat message", {
       id: id,
@@ -153,6 +165,22 @@ function ContactDetails(props) {
   //       data:data
   //     });
   // };
+  const startRecording = () => {
+    this.setState({ record: true });
+  }
+ 
+  const stopRecording = () => {
+    this.setState({ record: false });
+  }
+ 
+  const onData=(recordedBlob)=> {
+    console.log('chunk of real-time data is: ', recordedBlob);
+  }
+ 
+  const onStop=(recordedBlob)=> {
+    console.log('recordedBlob is: ', recordedBlob);
+  }
+
   const onSend = () => {
     socket.emit("Input Chat Message", {
       chatMessage: msg,
@@ -429,7 +457,7 @@ function ContactDetails(props) {
           d="flex"
         >
           <Box py="5px">
-            <GrEmoji size="30px" />
+            <GrEmoji size="30px" onClick={clickEmoji} />
           </Box>
           <Input
             name="chatMessage"
@@ -469,12 +497,26 @@ function ContactDetails(props) {
                   )}
                 </Dropzone>
 
-                <AiOutlineAudio size="25px" />
+                <AiOutlineAudio size="25px" onClick={()=>setRecord(!record)} />
               </Box>
             )}
           </Box>
         </Box>
+        {emoji?<Box>
+            <Picker onEmojiClick={onEmojiClick} disableAutoFocus={true} skinTone={SKIN_TONE_MEDIUM_DARK} disableSearchBar groupNames={{smileys_people:"PEOPLE"}}/>
+        </Box>:""}
       </div>
+      {/* {record?<div>
+        <ReactMic
+          record={record}
+          className="sound-wave"
+          onStop={onStop}
+          onData={onData}
+          strokeColor="#000000"
+          backgroundColor="#FF4081" />
+        <button onClick={startRecording} type="button">Start</button>
+        <button onClick={stopRecording} type="button">Stop</button>
+      </div>:""} */}
       <Drawer
         isOpen={isOpen}
         placement="bottom"
@@ -529,7 +571,6 @@ function ContactDetails(props) {
               ))}
             </Box>
           </DrawerBody>
-          <DrawerFooter></DrawerFooter>
         </DrawerContent>
       </Drawer>
     </Box>
